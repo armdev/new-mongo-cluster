@@ -1,0 +1,9 @@
+./run_single.sh
+
+run people on localhost:
+
+access http://localhost:3050/swagger-ui.html
+
+create simple entity and fetch
+
+single mongodb with username and password
