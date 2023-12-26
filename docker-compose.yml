@@ -1,0 +1,18 @@
+version: "3.8"
+services:   
+ 
+  people:
+    image: people  
+    build: ./people 
+    env_file: ./people/.env 
+    container_name: people        
+    ports:
+      - '7025:7025'
+    networks:
+      - clusternet 
+
+networks:
+  clusternet:
+    driver: bridge
+    ipam:
+      driver: default

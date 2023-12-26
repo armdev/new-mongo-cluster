@@ -1,3 +1,0 @@
-https://github.com/armdev/mongo-rs
-
-https://github.com/bitnami/containers/tree/main

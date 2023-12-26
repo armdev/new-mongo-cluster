@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mongo1:
+    container_name: mongo1
+    image: mongo:7.0.4  
+    volumes:
+      - ~/volumes/mongo7/primary:/data/db
+      - ./scripts/rs-init.sh:/scripts/rs-init.sh
+      - ./scripts/init.js:/scripts/init.js
+    networks:
+      - clusternet
+    ports:
+      - 127.0.0.1:27017:27017
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 5G
+    depends_on:
+      - mongo2     
+    links:
+      - mongo2   
+    restart: always
+    command: --setParameter internalQueryMaxBlockingSortMemoryUsageBytes=601514320
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs", "-wiredTigerCacheSizeGB=16" ]
+
+  mongo2:
+    container_name: mongo2
+    image: mongo:7.0.4   
+    volumes:
+      - ~/volumes/mongo7/secondary:/data/db
+    networks:
+      - clusternet
+    ports:
+      - 127.0.0.1:27018:27017
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    restart: always
+    command: --setParameter internalQueryMaxBlockingSortMemoryUsageBytes=601514320
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs", "-wiredTigerCacheSizeGB=16" ]
+    
+networks:
+  clusternet:
+    driver: bridge
